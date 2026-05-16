@@ -8,11 +8,15 @@ use App\Http\Controllers\ManagerLeaveController;
 use App\Http\Controllers\HRLeaveContoller;
 use App\Http\Controllers\leaveNotificationController;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\DB;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::middleware(['auth:sanctum', 'role:employee'])->group(function () {
+    Route::get('/leave-types', function () {
+        $types = DB::table('leave_types')->get();
+        return response()->json($types); 
+    });
     Route::get('/my-leave-requests', [LeaveRequestController::class, 'leaveRequests']);
     Route::get('/my-balances', [LeaveRequestController::class, 'myBalances']);
     Route::post('/leave-requests', [LeaveRequestController::class, 'store']);
