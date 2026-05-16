@@ -1,5 +1,9 @@
 import api from "../api/axios";
 
+export const getLeaveTypes = async () => {
+    return await api.get("/api/leave-types")
+}
+
 export const getMyBalances = async () => {
     return await api.get("/api/my-balances");
 };
@@ -12,7 +16,7 @@ export const getMyNotifications = async () => {
     return await api.get("/api/my-notifications");
 };
 
-export const postLeaveReaquest = async (request) => {
+export const postLeaveRequest = async (request) => {
     return await api.post("/api/leave-requests",request)
 }
 

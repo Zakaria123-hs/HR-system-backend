@@ -1,32 +1,34 @@
 import LogoutButton from "./LogoutButton"
 import { getMyBalances, getMyNotifications, getMyRequests } from "../services/employeeService"
 import { useState, useEffect } from "react"
-
+import LeaveRequestForm from "../components/LeaveRequestForm";
 const EmployeeDashboard = () => {
     const [balances, setBalances] = useState([]);
     const [requests, setRequests] = useState([]);
     const [notifications, setNotifications] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    
+    const fetchData = async () => {
+        try {
+            const [balancesRes, requestsRes, notificationsRes] = await Promise.all([
+                getMyBalances(),
+                getMyRequests(),
+                getMyNotifications(),
+            ]);
+            setBalances(balancesRes.data.myBalance);
+            setRequests(requestsRes.data.my_requests);
+            setNotifications(notificationsRes.data.notifications);
+        } catch (error) {
+            console.error("Failed to fetch data:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const [balancesRes, requestsRes, notificationsRes] = await Promise.all([
-                    getMyBalances(),
-                    getMyRequests(),
-                    getMyNotifications(),
-                ]);
-                setBalances(balancesRes.data.myBalance);
-                setRequests(requestsRes.data.my_requests);
-                setNotifications(notificationsRes.data.notifications);
-            } catch (error) {
-                console.error("Failed to fetch data:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
         fetchData();
     }, []);
+
 
     if (loading) return <p>Loading...</p>;
 
@@ -42,7 +44,7 @@ const EmployeeDashboard = () => {
                     <ul>
                         {balances.map((balance, index) => (
                             <li key={index}>
-                                {balance.leave_type}: {balance.remaining} days remaining
+                                {balance.leave_type}: {balance.remaining_days} days remaining
                             </li>
                         ))}
                     </ul>
@@ -76,6 +78,13 @@ const EmployeeDashboard = () => {
                     </ul>
                 )}
             </section>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <LeaveRequestForm onSuccess={fetchData}/>
         </div>
     );
 };
