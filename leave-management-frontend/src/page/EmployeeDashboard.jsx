@@ -7,6 +7,7 @@ const EmployeeDashboard = () => {
     const [requests, setRequests] = useState([]);
     const [notifications, setNotifications] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [showForm,setShowForm] = useState(false)
 
     
     const fetchData = async () => {
@@ -78,13 +79,18 @@ const EmployeeDashboard = () => {
                     </ul>
                 )}
             </section>
+
+            <button onClick={()=>setShowForm(!showForm)}>+leave</button>
             <br/>
             <br/>
             <br/>
             <br/>
             <br/>
             <br/>
-            <LeaveRequestForm onSuccess={fetchData}/>
+            {
+                showForm && <LeaveRequestForm onSuccess={fetchData}/>
+            }
+
         </div>
     );
 };
